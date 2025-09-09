@@ -6,11 +6,12 @@
   "scripts": {
     "start": "node api/server.js",
     "dev": "nodemon api/server.js",
-    "build": "echo 'No build step needed'",
-    "test": "echo 'No tests yet'"
+    "build": "echo 'No build step needed - static files ready'",
+    "test": "echo 'No tests specified'"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
