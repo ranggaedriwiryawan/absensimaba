@@ -1,25 +1,21 @@
 {
   "name": "absensimaba",
   "version": "1.0.0",
+  "private": true,
   "main": "api/server.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "node api/server.js",
-    "dev": "nodemon api/server.js",
-    "build": "echo 'No build step needed - static files ready'",
-    "test": "echo 'No tests specified'"
+    "dev": "nodemon api/server.js"
   },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
+  "engines": { "node": ">=18" },
   "dependencies": {
+    "cookie": "0.7.2",
+    "cookie-parser": "1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "cookie-parser": "^1.4.7",
-    "google-spreadsheet": "^4.1.4",
-    "google-auth-library": "^9.15.1"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

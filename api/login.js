@@ -1,44 +1,31 @@
-// api/login.js
-export default async function handler(req, res) {
-  const { email, password } = req.body || {};
-  
-  // Validasi input
-  if (!email || !password) {
-    return res.status(400).json({ 
-      ok: false, 
-      message: 'Email dan password wajib diisi.' 
+const form = document.getElementById('loginForm');
+const btn = document.getElementById('btnLogin');
+const errorBox = document.getElementById('error');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorBox.textContent = '';
+  btn.disabled = true; btn.textContent = 'Masuk...';
+
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+
+  try {
+    const resp = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',          // << penting agar cookie tersimpan
+      body: JSON.stringify({ username, password })
     });
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => ({}));
+      throw new Error(data.message || 'Login gagal');
+    }
+    // sukses → pindah ke halaman protected (server-side guard)
+    window.location.href = '/scanner';
+  } catch (err) {
+    errorBox.textContent = err.message || 'Terjadi kesalahan';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Masuk';
   }
-
-  // Validasi email domain (jika ada setting)
-  const validEmail = process.env.LOGIN_EMAIL_DOMAIN
-    ? email.endsWith(process.env.LOGIN_EMAIL_DOMAIN)
-    : true;
-
-  // Validasi password
-  const validPass = password === process.env.PANITIA_PASSWORD;
-
-  if (!validEmail) {
-    return res.status(401).json({ 
-      ok: false, 
-      message: `Email harus menggunakan domain ${process.env.LOGIN_EMAIL_DOMAIN}` 
-    });
-  }
-
-  if (!validPass) {
-    return res.status(401).json({ 
-      ok: false, 
-      message: 'Password salah.' 
-    });
-  }
-
-  // Set cookie login
-  res.cookie('auth', '1', {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'Lax',
-    maxAge: 12 * 60 * 60 * 1000 // 12 jam
-  });
-
-  res.json({ ok: true, message: 'Login berhasil' });
-}
+});
